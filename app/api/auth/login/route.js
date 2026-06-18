@@ -13,8 +13,8 @@ export async function GET() {
   const state = crypto.randomBytes(16).toString('hex');
   cookies().set('oauth_state', state, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true,
+    sameSite: none,
     path: '/',
     maxAge: 600, // 10분
   });
