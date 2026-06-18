@@ -18,8 +18,8 @@ export function setSession(notionUserId) {
   const signature = sign(notionUserId);
   cookies().set(COOKIE_NAME, `${notionUserId}.${signature}`, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
     path: '/',
     maxAge: 60 * 60 * 24 * 30, // 30일
   });
