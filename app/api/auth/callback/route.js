@@ -66,9 +66,9 @@ export async function GET(request) {
       workspaceName,
     });
 
-    // 세션 쿠키 설정 후 메인으로
+    // 세션 쿠키 설정 후 "완료" 페이지로 (팝업을 닫고 부모창에 신호)
     setSession(notionUserId);
-    return NextResponse.redirect(`${origin}/`);
+    return NextResponse.redirect(`${origin}/auth-complete`);
   } catch (e) {
     return NextResponse.redirect(`${origin}/?error=${encodeURIComponent(e.message)}`);
   }

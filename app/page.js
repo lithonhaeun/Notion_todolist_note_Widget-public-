@@ -1,5 +1,6 @@
 import { getSession } from './lib/session';
 import Widget from './Widget';
+import LoginButton from './LoginButton';
 
 export default function Home() {
   const userId = getSession();
@@ -12,10 +13,7 @@ export default function Home() {
         <p style={{ fontSize: 15, color: '#888', margin: 0, textAlign: 'center' }}>
           노션 계정으로 로그인하면<br />본인 데이터베이스와 연동된 위젯을 사용할 수 있어요.
         </p>
-        <a href="/api/auth/login"
-          style={{ background: '#fff', border: '0.5px solid #FFB6C1', color: '#d4537e', borderRadius: 8, padding: '12px 24px', fontSize: 15, fontWeight: 500, textDecoration: 'none', cursor: 'pointer' }}>
-          노션으로 로그인
-        </a>
+        <LoginButton />
       </div>
     );
   }
