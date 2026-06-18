@@ -4,20 +4,21 @@ import { useEffect } from 'react';
 
 export default function AuthComplete() {
   useEffect(() => {
-    if (window.opener) {
-      try {
+    try {
+      if (window.opener) {
         window.opener.postMessage('notion-auth-success', '*');
-      } catch (e) { }
-      window.close();
-    } else {
-      window.location.href = '/';
-    }
+      }
+    } catch (e) { }
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
-      <p style={{ fontSize: 16, color: '#555' }}>로그인 완료! 이 창은 자동으로 닫힙니다.</p>
-      <p style={{ fontSize: 13, color: '#aaa' }}>닫히지 않으면 이 창을 닫고 노션으로 돌아가세요.</p>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16, padding: 24, textAlign: 'center' }}>
+      <div style={{ fontSize: 40 }}>✅</div>
+      <p style={{ fontSize: 18, color: '#333', margin: 0, fontWeight: 500 }}>로그인 완료!</p>
+      <p style={{ fontSize: 14, color: '#888', margin: 0, lineHeight: 1.6 }}>
+        이 탭을 닫고 노션으로 돌아가세요.<br />
+        위젯이 자동으로 로그인된 상태로 바뀝니다.
+      </p>
     </div>
   );
 }
