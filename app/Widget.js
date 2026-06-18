@@ -20,7 +20,7 @@ function fmt(d) {
   return `${y}-${m}-${day}`;
 }
 
-export default function Widget() {
+export default function Widget({ widgetToken = null }) {
   const [tasks, setTasks] = useState([]);
   const [weekOffset, setWeekOffset] = useState(0);
   const [error, setError] = useState('');
@@ -41,10 +41,12 @@ export default function Widget() {
   }, [getWeekStart]);
 
   const api = async (body) => {
+    // widgetToken이 있으면 모든 요청에 포함 (노션 앱에서 쿠키 없이 인증)
+    const payload = widgetToken ? { ...body, widgetToken } : body;
     const res = await fetch('/api/notion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     if (!res.ok) {

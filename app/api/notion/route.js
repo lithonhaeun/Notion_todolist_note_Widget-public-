@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '../../lib/session';
-import { getConnection, updateDatabaseId } from '../../lib/supabase';
+import { getConnection, getConnectionByToken, updateDatabaseId } from '../../lib/supabase';
 
 const NOTION_VERSION = '2022-06-28';
 
@@ -19,26 +19,29 @@ function fmt(d) {
 }
 
 export async function POST(request) {
-  // 1) 세션에서 사용자 확인
-  const userId = getSession();
-  if (!userId) {
+  const body = await request.json();
+  const { action, widgetToken } = body;
+
+  // 1) 인증: widgetToken이 있으면 토큰으로(노션 앱용), 없으면 쿠키 세션으로(웹용)
+  let conn = null;
+  if (widgetToken) {
+    conn = await getConnectionByToken(widgetToken);
+  } else {
+    const userId = getSession();
+    if (userId) conn = await getConnection(userId);
+  }
+
+  if (!conn) {
     return NextResponse.json({ error: '로그인이 필요합니다', needLogin: true }, { status: 401 });
   }
 
-  // 2) 사용자 연결 정보 (복호화된 토큰 포함)
-  const conn = await getConnection(userId);
-  if (!conn) {
-    return NextResponse.json({ error: '연결 정보가 없습니다', needLogin: true }, { status: 401 });
-  }
+  const userId = conn.notionUserId;
 
   const headers = {
     'Authorization': `Bearer ${conn.accessToken}`,
     'Notion-Version': NOTION_VERSION,
     'Content-Type': 'application/json',
   };
-
-  const body = await request.json();
-  const { action } = body;
 
   try {
     // 사용자가 접근 가능한 데이터베이스 목록 검색 (DB 선택용)

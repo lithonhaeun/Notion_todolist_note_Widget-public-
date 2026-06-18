@@ -16,6 +16,7 @@ function sign(value) {
 // 로그인 성공 시 호출: 사용자 ID를 쿠키에 저장
 export function setSession(notionUserId) {
   const signature = sign(notionUserId);
+  // 노션 iframe(서드파티 컨텍스트) 안에서도 쿠키가 전송되도록 SameSite=None; Secure 사용
   cookies().set(COOKIE_NAME, `${notionUserId}.${signature}`, {
     httpOnly: true,
     secure: true,

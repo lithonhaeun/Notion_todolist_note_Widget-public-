@@ -14,7 +14,7 @@ export async function GET() {
   cookies().set('oauth_state', state, {
     httpOnly: true,
     secure: true,
-    sameSite: none,
+    sameSite: 'none',
     path: '/',
     maxAge: 600, // 10분
   });

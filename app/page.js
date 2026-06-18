@@ -1,8 +1,11 @@
+import { headers } from 'next/headers';
 import { getSession } from './lib/session';
+import { getConnection } from './lib/supabase';
 import Widget from './Widget';
 import LoginButton from './LoginButton';
+import WidgetUrlBox from './WidgetUrlBox';
 
-export default function Home() {
+export default async function Home() {
   const userId = getSession();
 
   // 로그인 안 한 경우: 노션 로그인 버튼
@@ -18,12 +21,18 @@ export default function Home() {
     );
   }
 
-  // 로그인 한 경우: 위젯 (+ 로그아웃 링크)
+  // 로그인 한 경우: 본인 위젯 주소 + 위젯
+  const conn = await getConnection(userId);
+  const host = headers().get('host');
+  const proto = host && host.includes('localhost') ? 'http' : 'https';
+  const widgetUrl = conn?.widgetToken ? `${proto}://${host}/w/${conn.widgetToken}` : null;
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 24px 0' }}>
         <a href="/api/auth/logout" style={{ fontSize: 12, color: '#aaa', textDecoration: 'none' }}>로그아웃</a>
       </div>
+      {widgetUrl && <WidgetUrlBox url={widgetUrl} />}
       <Widget />
     </div>
   );

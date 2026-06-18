@@ -4,11 +4,12 @@ import { useEffect } from 'react';
 
 export default function AuthComplete() {
   useEffect(() => {
+    // 부모창(노션 iframe)에 로그인 성공 신호 전송 시도
     try {
       if (window.opener) {
         window.opener.postMessage('notion-auth-success', '*');
       }
-    } catch (e) { }
+    } catch (e) {}
   }, []);
 
   return (
